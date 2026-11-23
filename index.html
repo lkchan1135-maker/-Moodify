@@ -1,0 +1,134 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Moodify</title>
+<style>
+*{box-sizing:border-box}
+body{
+margin:0;background:#100d1c;color:white;
+font-family:Arial,sans-serif;padding:25px;
+}
+.container{max-width:650px;margin:auto}
+h1{color:#bd91ff;font-size:38px}
+.subtitle{color:#aaa}
+h2{margin-top:35px}
+.moods{
+display:grid;grid-template-columns:repeat(2,1fr);gap:12px;
+}
+.card{
+background:#211a35;border:2px solid transparent;
+border-radius:17px;padding:20px;text-align:center;
+cursor:pointer;color:white;font-size:17px;
+}
+.card.selected{border-color:#b77cff;background:#35234e}
+.emoji{font-size:35px;display:block;margin-bottom:10px}
+button{
+background:#a66cff;color:white;border:0;
+border-radius:12px;padding:13px 20px;
+cursor:pointer;font-weight:bold;
+}
+#songs{display:grid;gap:12px;margin-top:15px}
+.song{
+background:#211a35;border-radius:15px;padding:17px;
+display:flex;align-items:center;justify-content:space-between;gap:10px;
+}
+.song small{color:#aaa}
+audio{width:100%;margin-top:25px}
+</style>
+</head>
+<body>
+<div class="container">
+<h1>🎧 Moodify</h1>
+<p class="subtitle">Music that matches your mood.</p>
+<h2>Choose Your Mood</h2>
+<div class="moods" id="moods">
+<div class="card" data-mood="Happy"><span class="emoji">😊</span>Happy</div>
+<div class="card" data-mood="Sad"><span class="emoji">😢</span>Sad</div>
+<div class="card" data-mood="Angry"><span class="emoji">😡</span>Angry</div>
+<div class="card" data-mood="Tired"><span class="emoji">😴</span>Tired</div>
+<div class="card" data-mood="Excited"><span class="emoji">🤩</span>Excited</div>
+<div class="card" data-mood="Calm"><span class="emoji">😌</span>Calm</div>
+</div>
+<h2>Recommendations</h2>
+<p class="subtitle" id="message">Choose a mood to discover music.</p>
+<div id="songs"></div>
+<audio id="player" controls></audio>
+</div>
+<script>
+const music = {
+Happy:[
+["Happy Song 1","SoundHelix","https://www.soundhelix.com/examples/mp3/SoundHelix-Song-1.mp3"],
+["Happy Song 2","SoundHelix","https://www.soundhelix.com/examples/mp3/SoundHelix-Song-2.mp3"],
+["Happy Song 3","SoundHelix","https://www.soundhelix.com/examples/mp3/SoundHelix-Song-3.mp3"]
+],
+Sad:[
+["Calm Song 1","SoundHelix","https://www.soundhelix.com/examples/mp3/SoundHelix-Song-4.mp3"],
+["Soft Song 2","SoundHelix","https://www.soundhelix.com/examples/mp3/SoundHelix-Song-5.mp3"],
+["Soft Song 3","SoundHelix","https://www.soundhelix.com/examples/mp3/SoundHelix-Song-6.mp3"]
+],
+Angry:[
+["Relax Song 1","SoundHelix","https://www.soundhelix.com/examples/mp3/SoundHelix-Song-7.mp3"],
+["Relax Song 2","SoundHelix","https://www.soundhelix.com/examples/mp3/SoundHelix-Song-8.mp3"]
+],
+Tired:[
+["Rest Song 1","SoundHelix","https://www.soundhelix.com/examples/mp3/SoundHelix-Song-9.mp3"],
+["Rest Song 2","SoundHelix","https://www.soundhelix.com/examples/mp3/SoundHelix-Song-10.mp3"]
+],
+Excited:[
+["Energy Song 1","SoundHelix","https://www.soundhelix.com/examples/mp3/SoundHelix-Song-11.mp3"],
+["Energy Song 2","SoundHelix","https://www.soundhelix.com/examples/mp3/SoundHelix-Song-12.mp3"]
+],
+Calm:[
+["Peaceful Song 1","SoundHelix","https://www.soundhelix.com/examples/mp3/SoundHelix-Song-13.mp3"],
+["Peaceful Song 2","SoundHelix","https://www.soundhelix.com/examples/mp3/SoundHelix-Song-14.mp3"]
+]
+};
+
+const cards=document.querySelectorAll(".card");
+const songs=document.getElementById("songs");
+const player=document.getElementById("player");
+
+cards.forEach(card=>{
+card.addEventListener("click",()=>{
+cards.forEach(c=>c.classList.remove("selected"));
+card.classList.add("selected");
+
+const mood=card.dataset.mood;
+
+document.getElementById("message").textContent=
+"Music selected for your "+mood+" mood.";
+
+songs.innerHTML="";
+
+music[mood].forEach(song=>{
+const item=document.createElement("div");
+item.className="song";
+
+const info=document.createElement("div");
+const title=document.createElement("strong");
+title.textContent=song[0];
+
+const artist=document.createElement("small");
+artist.textContent=song[1];
+
+info.append(title,document.createElement("br"),artist);
+
+const play=document.createElement("button");
+play.textContent="▶ Play";
+
+play.onclick=()=>{
+player.src=song[2];
+player.play().catch(()=>alert("Unable to play this track. Try again."));
+};
+
+item.append(info,play);
+songs.append(item);
+});
+});
+});
+</script>
+</body>
+</html>
