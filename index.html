@@ -1,0 +1,135 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="theme-color" content="#100d1c">
+<title>Moodify</title>
+<style>
+*{box-sizing:border-box}
+body{
+margin:0;padding:24px;
+background:#100d1c;color:white;
+font-family:Arial,sans-serif;
+}
+.container{max-width:650px;margin:auto}
+h1{font-size:38px;color:#bd91ff}
+.subtitle{color:#aaa}
+h2{margin-top:32px}
+.moods{display:grid;grid-template-columns:repeat(2,1fr);gap:12px}
+.card{
+padding:22px 12px;
+border:2px solid transparent;
+border-radius:17px;
+background:#211a35;color:white;
+text-align:center;font-size:17px;
+cursor:pointer;
+}
+.card.selected{border-color:#bd91ff;background:#35234e}
+.emoji{display:block;font-size:35px;margin-bottom:10px}
+#songs{display:grid;gap:12px;margin-top:15px}
+.song{
+background:#211a35;border-radius:15px;
+padding:17px;display:flex;
+align-items:center;justify-content:space-between;
+gap:10px;
+}
+.song small{display:block;color:#aaa;margin-top:5px}
+button{
+background:#a66cff;color:white;border:0;
+border-radius:12px;padding:12px 17px;
+font-weight:bold;cursor:pointer;
+}
+audio{width:100%;margin-top:20px}
+</style>
+</head>
+<body>
+<div class="container">
+<h1>🎧 Moodify</h1>
+<p class="subtitle">Music that matches your mood.</p>
+
+<h2>Choose Your Mood</h2>
+<div class="moods">
+<div class="card" data-mood="Happy"><span class="emoji">😊</span>Happy</div>
+<div class="card" data-mood="Sad"><span class="emoji">😢</span>Sad</div>
+<div class="card" data-mood="Angry"><span class="emoji">😡</span>Angry</div>
+<div class="card" data-mood="Tired"><span class="emoji">😴</span>Tired</div>
+<div class="card" data-mood="Excited"><span class="emoji">🤩</span>Excited</div>
+<div class="card" data-mood="Calm"><span class="emoji">😌</span>Calm</div>
+</div>
+
+<h2>Recommendations</h2>
+<p class="subtitle" id="message">Choose a mood to discover music.</p>
+<div id="songs"></div>
+<audio id="player" controls></audio>
+</div>
+
+<script>
+const music={
+Happy:[
+["Happy Track 1","SoundHelix","https://www.soundhelix.com/examples/mp3/SoundHelix-Song-1.mp3"],
+["Happy Track 2","SoundHelix","https://www.soundhelix.com/examples/mp3/SoundHelix-Song-2.mp3"]
+],
+Sad:[
+["Soft Track 1","SoundHelix","https://www.soundhelix.com/examples/mp3/SoundHelix-Song-3.mp3"],
+["Soft Track 2","SoundHelix","https://www.soundhelix.com/examples/mp3/SoundHelix-Song-4.mp3"]
+],
+Angry:[
+["Relax Track 1","SoundHelix","https://www.soundhelix.com/examples/mp3/SoundHelix-Song-5.mp3"],
+["Relax Track 2","SoundHelix","https://www.soundhelix.com/examples/mp3/SoundHelix-Song-6.mp3"]
+],
+Tired:[
+["Rest Track 1","SoundHelix","https://www.soundhelix.com/examples/mp3/SoundHelix-Song-7.mp3"]
+],
+Excited:[
+["Energy Track 1","SoundHelix","https://www.soundhelix.com/examples/mp3/SoundHelix-Song-8.mp3"]
+],
+Calm:[
+["Peaceful Track 1","SoundHelix","https://www.soundhelix.com/examples/mp3/SoundHelix-Song-9.mp3"]
+]
+};
+
+const cards=document.querySelectorAll(".card");
+const songs=document.getElementById("songs");
+const player=document.getElementById("player");
+
+cards.forEach(card=>{
+card.addEventListener("click",()=>{
+cards.forEach(c=>c.classList.remove("selected"));
+card.classList.add("selected");
+
+const mood=card.dataset.mood;
+document.getElementById("message").textContent=
+"Music selected for your "+mood+" mood.";
+
+songs.innerHTML="";
+
+music[mood].forEach(song=>{
+const item=document.createElement("div");
+item.className="song";
+
+const info=document.createElement("div");
+const title=document.createElement("strong");
+title.textContent=song[0];
+
+const artist=document.createElement("small");
+artist.textContent=song[1];
+
+info.append(title,artist);
+
+const play=document.createElement("button");
+play.textContent="▶ Play";
+play.onclick=()=>{
+player.src=song[2];
+player.play().catch(()=>alert("Unable to play this track."));
+};
+
+item.append(info,play);
+songs.append(item);
+});
+});
+});
+</script>
+</body>
+</html>
