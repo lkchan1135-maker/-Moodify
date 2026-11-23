@@ -2,5 +2,6 @@
 {
   "appId": "com.moodify.app",
   "appName": "Moodify",
-  "webDir": "dist"
+  "webDir": "dist",
+  "bundledWebRuntime": false
 }
